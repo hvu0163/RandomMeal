@@ -7,11 +7,20 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Login extends AppCompatActivity {
-    TextView create_account, forgot_password;
+    EditText username, password ;
+    Button login;
+    TextView create_account, forgot_password, textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,24 @@ public class Login extends AppCompatActivity {
         this.startActivity(intent);
     }
     public void login_on_click(View view) {
-
+        username = findViewById(R.id.username_txt);
+        password = findViewById(R.id.password_txt);
+        DBContext db = new DBContext();
+        Connection connection = db.CONN();
+        String sql = "select * from Account where Username = ? and Password = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username.getText().toString());
+            ps.setString(2, password.getText().toString());
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()) {
+                Toast.makeText(this,"ss",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this,"ff",Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.toString();
+        }
     }
+
 }
