@@ -1,43 +1,91 @@
 package com.example.project;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.os.StrictMode;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import com.example.project.model.Account;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class DBContext {
-    String ip = "192.168.43.10";
-    String classs = "net.sourceforge.jtds.jdbc.Driver";
-    String DBName = "ProjectPRM";
-    String username = "sa";
-    String password = "sa";
+public class DBContext extends SQLiteOpenHelper {
 
-    @SuppressLint("NewApi")
-    public Connection CONN() {
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                .permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        Connection conn = null;
-        String ConnURL;
+    private static final String TAG = "SQLite";
+
+    // Database Version
+    private static final int DATABASE_VERSION = 1;
+
+    // Database Name
+    private static final String DATABASE_NAME = "ProjectPRM";
+
+    public DBContext(@Nullable Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        String sqlCreate = "";
+
+        //Table Account
+        sqlCreate += "create table Account(\n" +
+                "Username nvarchar(200) primary key NOT NULL,\n" +
+                "[Password] nvarchar(200) NOT NULL\n" +
+                ")";
+        db.execSQL(sqlCreate);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS Account");
+        onCreate(db);
+    }
+
+    public void addAccount(Account account) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("Username", account.getUsername());
+        values.put("Password", account.getPassword());
+
+        // Inserting Row
+        db.insert("Account", null, values);
+
+        // Closing database connection
+        db.close();
+    }
+
+    public void addAdminAccount() {
+        Account account = new Account("admin", "admin");
+        addAccount(account);
+    }
+
+    public Account getAccount(String username, String password) {
         try {
-            Class.forName(classs);
-            ConnURL = "jdbc:jtds:sqlserver://" + ip + ";"
-                    + "databaseName=" + DBName + ";user=" + username + ";password="
-                    + password + ";";
-            conn = (Connection) DriverManager.getConnection(ConnURL);
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from Account where Username = ? and Password = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{username, password});
+            if (cursor.moveToNext()) {
+                Account account = new Account();
+                account.setUsername(cursor.getString(0));
+                account.setPassword(cursor.getString(1));
+                return account;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.getMessage().toString();
+            return null;
         }
-        catch (SQLException se)
-        {
-            Log.e("safiya", se.getMessage());
-        }
-        catch (ClassNotFoundException e) {
-        }
-        catch (Exception e) {
-            Log.e("error", e.getMessage());
-        }
-        return conn;
     }
 }
