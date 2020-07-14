@@ -1,6 +1,7 @@
 package com.example.project.model;
 
 public class Account {
+    private int userID;
     private String username;
     private String password;
 
@@ -10,6 +11,14 @@ public class Account {
     }
 
     public Account() {
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public String getUsername() {

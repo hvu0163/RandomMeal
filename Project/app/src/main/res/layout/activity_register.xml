@@ -113,13 +113,13 @@
                     app:layout_constraintVertical_bias="1" />
 
                 <EditText
-                    android:id="@+id/email_input"
+                    android:id="@+id/name_input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="13dp"
                     android:background="@drawable/username_input"
                     android:ems="10"
-                    android:hint="Email"
+                    android:hint="Full Name"
                     android:inputType="textEmailAddress"
                     android:paddingLeft="13dp"
                     app:layout_constraintBottom_toTopOf="@+id/password_txt_register"
@@ -158,14 +158,29 @@
                     app:layout_constraintVertical_bias="1" />
 
                 <EditText
-                    android:id="@+id/sdt"
+                    android:id="@+id/age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="13dp"
                     android:background="@drawable/username_input"
                     android:ems="10"
-                    android:hint="Phone number"
-                    android:inputType="textPassword"
+                    android:hint="Age"
+                    android:inputType="numberDecimal"
+                    android:paddingLeft="13dp"
+                    app:layout_constraintBottom_toTopOf="@+id/password_txt_register"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="1" />
+
+                <EditText
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="13dp"
+                    android:background="@drawable/username_input"
+                    android:ems="10"
+                    android:hint="Address"
+                    android:inputType="textPersonName"
                     android:paddingLeft="13dp"
                     app:layout_constraintBottom_toTopOf="@+id/password_txt_register"
                     app:layout_constraintEnd_toEndOf="parent"
