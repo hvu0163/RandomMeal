@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,18 +19,29 @@ import java.sql.SQLException;
 public class Login extends AppCompatActivity {
     TextView username, password, textView;
     Button login;
+    TextView create_account, forgot_password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        create_account = findViewById(R.id.create_account);
+        SpannableString content = new SpannableString("Create account");
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        create_account.setText(content);
+
+        forgot_password = findViewById(R.id.forgot_password);
+        SpannableString content1 = new SpannableString("Forgot password");
+        content1.setSpan(new UnderlineSpan(), 0, content1.length(), 0);
+        forgot_password.setText(content1);
     }
 
-    public void on_click_register(View view) {
-        textView = findViewById(R.id.create_account);
+    public void register_on_click(View view) {
         Intent intent = new Intent(this, Register.class);
         this.startActivity(intent);
-//        Toast.makeText(this,"aa",Toast.LENGTH_SHORT).show();
+    }
+    public void login_on_click(View view) {
+
     }
 
     public void onClick(View view) {

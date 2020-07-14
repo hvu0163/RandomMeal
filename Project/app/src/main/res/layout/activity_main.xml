@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.5">
 
         <TextView
-            android:id="@+id/regiter_layout"
+            android:id="@+id/register_layout"
             android:layout_width="335dp"
             android:layout_height="528dp"
             android:background="#BF000000"
@@ -46,8 +46,8 @@
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Do you want an account?"
+                android:layout_height="match_parent"
+                android:text="Do you want an account? "
                 android:textColor="#FFFFFF"
                 android:textSize="13dp" />
 
@@ -55,8 +55,7 @@
                 android:id="@+id/create_account"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:onClick="on_click_register"
-                android:text=" Create an account"
+                android:onClick="register_on_click"
                 android:textColor="#2DB7FF"
                 android:textSize="13dp" />
         </LinearLayout>
@@ -113,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_default_primary"
-            android:onClick="onClick"
+            android:onClick="login_on_click"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
