@@ -13,6 +13,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.example.project.model.Account;
+import com.example.project.model.UserInformation;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,14 +40,25 @@ public class DBContext extends SQLiteOpenHelper {
 
         //Table Account
         sqlCreate += "create table Account(\n" +
-                "Username nvarchar(200) primary key NOT NULL,\n" +
-                "[Password] nvarchar(200) NOT NULL\n" +
+                "Username nvarchar(200) unique NOT NULL,\n" +
+                "[Password] nvarchar(200) NOT NULL,\n" +
+                "UserID int identity(1,1) primary key\n" +
+                ")\n";
+        db.execSQL(sqlCreate);
+        //Table UserInformation
+        sqlCreate = "";
+        sqlCreate += "create table UserInfor(\n" +
+                "UserID int references Account(UserID),\n" +
+                "FullName nvarchar(200),\n" +
+                "[Address] nvarchar(200),\n" +
+                "Age int\n" +
                 ")";
         db.execSQL(sqlCreate);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS UserInfor");
         db.execSQL("DROP TABLE IF EXISTS Account");
         onCreate(db);
     }
@@ -87,5 +99,35 @@ public class DBContext extends SQLiteOpenHelper {
             e.getMessage().toString();
             return null;
         }
+    }
+
+    public Boolean checkUsername(String username) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from Account where Username = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{username});
+            if(cursor.moveToNext()) {
+                return true;
+            } else
+                return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void addUserInformation(UserInformation userInformation) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("UserID", userInformation.getUserID());
+        values.put("FullName", userInformation.getFullName());
+        values.put("Address", userInformation.getAddress());
+        values.put("Age", userInformation.getAge());
+
+        // Inserting Row
+        db.insert("UserInfor", null, values);
+
+        // Closing database connection
+        db.close();
     }
 }
