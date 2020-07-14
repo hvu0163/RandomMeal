@@ -8,6 +8,7 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,9 +18,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Login extends AppCompatActivity {
-    TextView username, password, textView;
+    EditText username, password ;
     Button login;
-    TextView create_account, forgot_password;
+    TextView create_account, forgot_password, textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +42,6 @@ public class Login extends AppCompatActivity {
         this.startActivity(intent);
     }
     public void login_on_click(View view) {
-
-    }
-
-    public void onClick(View view) {
         username = findViewById(R.id.username_txt);
         password = findViewById(R.id.password_txt);
         DBContext db = new DBContext();
@@ -64,4 +61,5 @@ public class Login extends AppCompatActivity {
             e.toString();
         }
     }
+
 }
