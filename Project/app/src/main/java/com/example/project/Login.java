@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.project.model.Account;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +28,10 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DBContext db = new DBContext(this);
+        db.addAdminAccount();
+
         create_account = findViewById(R.id.create_account);
         SpannableString content = new SpannableString("Create account");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
@@ -42,23 +48,15 @@ public class Login extends AppCompatActivity {
         this.startActivity(intent);
     }
     public void login_on_click(View view) {
+        DBContext db = new DBContext(this);
         username = findViewById(R.id.username_txt);
         password = findViewById(R.id.password_txt);
-        DBContext db = new DBContext();
-        Connection connection = db.CONN();
-        String sql = "select * from Account where Username = ? and Password = ?";
-        try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, username.getText().toString());
-            ps.setString(2, password.getText().toString());
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()) {
-                Toast.makeText(this,"ss",Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this,"ff",Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.toString();
+
+        Account account = db.getAccount(username.getText().toString(), password.getText().toString());
+        if(account != null) {
+            Toast.makeText(this,"ss",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this,"ff",Toast.LENGTH_LONG).show();
         }
     }
 
