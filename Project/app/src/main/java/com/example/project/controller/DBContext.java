@@ -1,4 +1,4 @@
-package com.example.project;
+package com.example.project.controller;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
