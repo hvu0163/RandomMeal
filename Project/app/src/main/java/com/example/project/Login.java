@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.project.ui.ForgotPassword;
 import com.example.project.model.Account;
 
 import java.sql.Connection;
@@ -20,7 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Login extends AppCompatActivity {
-    EditText username, password ;
+    EditText username, password;
     Button login;
     TextView create_account, forgot_password, textView;
 
@@ -47,6 +48,7 @@ public class Login extends AppCompatActivity {
         Intent intent = new Intent(this, Register.class);
         this.startActivity(intent);
     }
+
     public void login_on_click(View view) {
         DBContext db = new DBContext(this);
         username = findViewById(R.id.username_txt);
@@ -55,9 +57,18 @@ public class Login extends AppCompatActivity {
         Account account = db.getAccount(username.getText().toString(), password.getText().toString());
         if(account != null) {
             Toast.makeText(this,"ss",Toast.LENGTH_LONG).show();
+            
+        Intent intent = new Intent(this, Home.class);
+        this.startActivity(intent);
         } else {
             Toast.makeText(this,"ff",Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void forgot_password_on_click(View view) {
+        Intent intent = new Intent(this, ForgotPassword.class);
+        this.startActivity(intent);
+        
     }
 
 }

@@ -21,9 +21,7 @@ public class Register extends AppCompatActivity {
     }
 
     public void cancel_on_click(View view) {
-        button = findViewById(R.id.cancel_button);
-        Intent intent = new Intent(this, Login.class);
-        this.startActivity(intent);
+        onBackPressed();
     }
 
     public void register_on_click(View view) {
