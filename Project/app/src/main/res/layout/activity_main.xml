@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/wall"
     android:theme="@style/Theme.AppCompat.NoActionBar"
-    tools:context=".Login">
+    tools:context=".controller.Login">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

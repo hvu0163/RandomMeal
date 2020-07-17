@@ -1,4 +1,4 @@
-package com.example.project;
+package com.example.project.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,13 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.project.ui.ForgotPassword;
+import com.example.project.R;
 import com.example.project.model.Account;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class Login extends AppCompatActivity {
     EditText username, password;
@@ -55,20 +50,20 @@ public class Login extends AppCompatActivity {
         password = findViewById(R.id.password_txt);
 
         Account account = db.getAccount(username.getText().toString(), password.getText().toString());
-        if(account != null) {
-            Toast.makeText(this,"ss",Toast.LENGTH_LONG).show();
-            
-        Intent intent = new Intent(this, Home.class);
-        this.startActivity(intent);
+        if (account != null) {
+            Toast.makeText(this, "ss", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(this, Home.class);
+            this.startActivity(intent);
         } else {
-            Toast.makeText(this,"ff",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "ff", Toast.LENGTH_LONG).show();
         }
     }
 
     public void forgot_password_on_click(View view) {
         Intent intent = new Intent(this, ForgotPassword.class);
         this.startActivity(intent);
-        
+
     }
 
 }
