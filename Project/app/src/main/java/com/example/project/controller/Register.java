@@ -25,13 +25,13 @@ public class Register extends AppCompatActivity {
     }
 
     public void register_on_click(View view) {
-        EditText username, name, password, repass, age, address;
+        EditText username, name, password, repass, age, email;
         username = findViewById(R.id.username_txt_register);
         name = findViewById(R.id.name_input);
         password = findViewById(R.id.password_txt_register);
         repass = findViewById(R.id.re_enter_password);
         age = findViewById(R.id.age);
-        address = findViewById(R.id.address);
+        email = findViewById(R.id.email);
 
         String pass = password.getText().toString();
         String repassword = repass.getText().toString();
@@ -51,7 +51,7 @@ public class Register extends AppCompatActivity {
                 UserInformation userInformation = new UserInformation();
                 userInformation.setFullName(name.getText().toString());
                 userInformation.setAge(Integer.parseInt(age.getText().toString()));
-                userInformation.setAddress(address.getText().toString());
+                userInformation.setEmail(email.getText().toString());
                 userInformation.setUserID(account.getUserID());
                 db.addUserInformation(userInformation);
                 Toast.makeText(this,"ss",Toast.LENGTH_LONG).show();
