@@ -124,6 +124,7 @@
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="forgot_password_on_click"
             android:text="Forgot password"
             android:textColor="#2DB7FF"
             android:textSize="13dp"
