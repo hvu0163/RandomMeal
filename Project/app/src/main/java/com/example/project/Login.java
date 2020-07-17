@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.project.ui.ForgotPassword;
+import com.example.project.model.Account;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,6 +29,10 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        DBContext db = new DBContext(this);
+        db.addAdminAccount();
+
         create_account = findViewById(R.id.create_account);
         SpannableString content = new SpannableString("Create account");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
@@ -45,13 +50,25 @@ public class Login extends AppCompatActivity {
     }
 
     public void login_on_click(View view) {
+        DBContext db = new DBContext(this);
+        username = findViewById(R.id.username_txt);
+        password = findViewById(R.id.password_txt);
+
+        Account account = db.getAccount(username.getText().toString(), password.getText().toString());
+        if(account != null) {
+            Toast.makeText(this,"ss",Toast.LENGTH_LONG).show();
+            
         Intent intent = new Intent(this, Home.class);
         this.startActivity(intent);
+        } else {
+            Toast.makeText(this,"ff",Toast.LENGTH_LONG).show();
+        }
     }
 
     public void forgot_password_on_click(View view) {
         Intent intent = new Intent(this, ForgotPassword.class);
         this.startActivity(intent);
+        
     }
 
 }
