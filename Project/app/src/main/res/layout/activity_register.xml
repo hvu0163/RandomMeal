@@ -173,14 +173,14 @@
                     app:layout_constraintVertical_bias="1" />
 
                 <EditText
-                    android:id="@+id/address"
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="13dp"
                     android:background="@drawable/username_input"
                     android:ems="10"
-                    android:hint="Address"
-                    android:inputType="textPersonName"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
                     android:paddingLeft="13dp"
                     app:layout_constraintBottom_toTopOf="@+id/password_txt_register"
                     app:layout_constraintEnd_toEndOf="parent"

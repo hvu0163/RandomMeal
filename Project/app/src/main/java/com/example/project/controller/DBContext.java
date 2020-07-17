@@ -1,25 +1,15 @@
 package com.example.project.controller;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
-import android.os.StrictMode;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.project.model.Account;
 import com.example.project.model.UserInformation;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class DBContext extends SQLiteOpenHelper {
 
@@ -41,17 +31,17 @@ public class DBContext extends SQLiteOpenHelper {
 
         //Table Account
         sqlCreate += "create table Account(\n" +
+                "UserID INTEGER primary key AUTOINCREMENT,\n" +
                 "Username nvarchar(200) unique NOT NULL,\n" +
-                "[Password] nvarchar(200) NOT NULL,\n" +
-                "UserID int identity(1,1) primary key\n" +
+                "[Password] nvarchar(200) NOT NULL\n" +
                 ")\n";
         db.execSQL(sqlCreate);
         //Table UserInformation
         sqlCreate = "";
         sqlCreate += "create table UserInfor(\n" +
-                "UserID int references Account(UserID),\n" +
+                "UserID INTEGER references Account(UserID),\n" +
                 "FullName nvarchar(200),\n" +
-                "[Address] nvarchar(200),\n" +
+                "[Email] nvarchar(200),\n" +
                 "Age int\n" +
                 ")";
         db.execSQL(sqlCreate);
@@ -90,9 +80,51 @@ public class DBContext extends SQLiteOpenHelper {
             Cursor cursor = db.rawQuery(sql, new String[]{username, password});
             if (cursor.moveToNext()) {
                 Account account = new Account();
-                account.setUsername(cursor.getString(0));
-                account.setPassword(cursor.getString(1));
+                account.setUserID(cursor.getInt(0));
+                account.setUsername(cursor.getString(1));
+                account.setPassword(cursor.getString(2));
                 return account;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.getMessage().toString();
+            return null;
+        }
+    }
+
+    public Account getAccountByUsername(String username) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from Account where Username = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{username});
+            if (cursor.moveToNext()) {
+                Account account = new Account();
+                account.setUserID(cursor.getInt(0));
+                account.setUsername(cursor.getString(1));
+                account.setPassword(cursor.getString(2));
+                return account;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.getMessage().toString();
+            return null;
+        }
+    }
+
+    public UserInformation getUserInforByAccount (Account account) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from UserInfor where UserID = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(account.getUserID())});
+            if(cursor.moveToNext()) {
+                UserInformation userInformation = new UserInformation();
+                userInformation.setUserID(account.getUserID());
+                userInformation.setFullName(cursor.getString(1));
+                userInformation.setEmail(cursor.getString(2));
+                userInformation.setAge(cursor.getInt(3));
+                return userInformation;
             } else {
                 return null;
             }
@@ -122,7 +154,7 @@ public class DBContext extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("UserID", userInformation.getUserID());
         values.put("FullName", userInformation.getFullName());
-        values.put("Address", userInformation.getAddress());
+        values.put("Email", userInformation.getEmail());
         values.put("Age", userInformation.getAge());
 
         // Inserting Row
@@ -130,5 +162,12 @@ public class DBContext extends SQLiteOpenHelper {
 
         // Closing database connection
         db.close();
+    }
+
+    public void resetPassword(Account account) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("Password", "123");
+        db.update("Account", values, "Username = ?", new String[]{account.getUsername()});
     }
 }
