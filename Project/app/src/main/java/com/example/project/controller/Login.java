@@ -33,6 +33,17 @@ public class Login extends AppCompatActivity {
         if(db.getCheckCreate() == 1) {
             db.addAdminAccount();
             db.addCategory();
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("insert.txt")));
+                String line = bufferedReader.readLine();
+                while (line != null) {
+                    db.addDisk(line);
+                    line = bufferedReader.readLine();
+                }
+                db.setCheckCreate(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         create_account = findViewById(R.id.create_account);
@@ -59,20 +70,6 @@ public class Login extends AppCompatActivity {
         Account account = db.getAccount(username.getText().toString(), password.getText().toString());
         if (account != null) {
             Toast.makeText(this, "ss", Toast.LENGTH_LONG).show();
-
-            if(db.getCheckCreate() == 1) {
-                try {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("insert.txt")));
-                    String line = bufferedReader.readLine();
-                    while (line != null) {
-                        db.addDisk(line);
-                        line = bufferedReader.readLine();
-                    }
-                    db.setCheckCreate(0);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
             Intent intent = new Intent(this, Home.class);
             this.startActivity(intent);

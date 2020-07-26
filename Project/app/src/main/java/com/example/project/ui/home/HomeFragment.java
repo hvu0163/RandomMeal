@@ -6,17 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.project.R;
 import com.example.project.adapter.ListProductAdapter;
+import com.example.project.controller.DBContext;
 import com.example.project.model.Dishes;
 
 import java.util.ArrayList;
@@ -39,15 +38,19 @@ public class HomeFragment extends Fragment {
 //                textView.setText(s);
 //            }
 //        });
+        DBContext db = new DBContext(root.getContext());
+        List<Dishes> content = db.getTopDisk();
         final List<Dishes> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Dishes d = new Dishes();
-            d.setName(i+"");
-            d.setUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Korean_acorn_jelly-Dotorimuk-03.jpg/1200px-Korean_acorn_jelly-Dotorimuk-03.jpg");
-            list.add(d);
-        }
+//        System.out.println();
+//        for (int i = 0; i < 9; i++) {
+//            Dishes d = new Dishes();
+//            d.setName("Phở bò");
+//            d.setUrl("https://hocnauan.edu.vn/wp-content/uploads/2018/10/to-pho-bo-ha-noi.jpg");
+//            Dishes dishes = db.getADisk();
+//            list.add(dishes);
+//        }
         gridView = root.findViewById(R.id.gridview);
-        ListProductAdapter abc = new ListProductAdapter(getContext(), R.layout.fragment_home, list);
+        ListProductAdapter abc = new ListProductAdapter(getContext(), R.layout.fragment_home, content);
         gridView.setNumColumns(3);
         gridView.setHorizontalSpacing(10);
         gridView.setVerticalSpacing(10);

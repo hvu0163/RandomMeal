@@ -9,9 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.project.model.Account;
+import com.example.project.model.Dishes;
 import com.example.project.model.Disk;
 import com.example.project.model.DiskCategory;
 import com.example.project.model.UserInformation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBContext extends SQLiteOpenHelper {
 
@@ -177,7 +181,32 @@ public class DBContext extends SQLiteOpenHelper {
         values.put("CategoryName", diskCategory.getCategoryName());
         values.put("Description", diskCategory.getDescription());
 
-        db.insert("DiskCategory", null, values);
+        //Soup
+        DiskCategory diskCategory1 = new DiskCategory();
+        diskCategory1.setCategoryName("Soup");
+        diskCategory1.setDescription("");
+        ContentValues values1 = new ContentValues();
+        values1.put("CategoryName", diskCategory1.getCategoryName());
+        values1.put("Description", diskCategory1.getDescription());
+        db.insert("DiskCategory", null, values1);
+
+        //Appetizer
+        DiskCategory diskCategory2 = new DiskCategory();
+        diskCategory2.setCategoryName("Appetizer");
+        diskCategory2.setDescription("");
+        ContentValues values2 = new ContentValues();
+        values2.put("CategoryName", diskCategory2.getCategoryName());
+        values2.put("Description", diskCategory2.getDescription());
+        db.insert("DiskCategory", null, values2);
+
+        //dessert
+        DiskCategory diskCategory3 = new DiskCategory();
+        diskCategory3.setCategoryName("dessert");
+        diskCategory3.setDescription("");
+        ContentValues values3 = new ContentValues();
+        values3.put("CategoryName", diskCategory3.getCategoryName());
+        values3.put("Description", diskCategory3.getDescription());
+        db.insert("DiskCategory", null, values3);
         db.close();
     }
 
@@ -257,5 +286,51 @@ public class DBContext extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("Password", "123");
         db.update("Account", values, "Username = ?", new String[]{account.getUsername()});
+    }
+
+    public List<Dishes> getTopDisk() {
+        List<Dishes> list = new ArrayList<>();
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from Disk order by RateAVG desc LIMIT 9";
+            Cursor cursor = db.rawQuery(sql, new String[]{});
+            while(cursor.moveToNext()) {
+                Disk disk = new Disk();
+                disk.setDescription(cursor.getString(2));
+                disk.setDiskName(cursor.getString(1));
+
+                Dishes dishes = new Dishes();
+                dishes.setName(disk.getDiskName());
+                dishes.setUrl(disk.getDescription().trim());
+
+                list.add(dishes);
+            }
+
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
+    public Dishes getADisk() {
+        List<Dishes> list = new ArrayList<>();
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from Disk order by RateAVG desc LIMIT 9";
+            Cursor cursor = db.rawQuery(sql, new String[]{});
+            if(cursor.moveToNext()) {
+                Disk disk = new Disk();
+                disk.setDescription(cursor.getString(2));
+                disk.setDiskName(cursor.getString(1));
+
+                Dishes dishes = new Dishes();
+                dishes.setName(disk.getDiskName());
+                dishes.setUrl(disk.getDescription().trim());
+
+                return dishes;
+            }
+
+        } catch (Exception e) {
+        }
+        return null;
     }
 }
