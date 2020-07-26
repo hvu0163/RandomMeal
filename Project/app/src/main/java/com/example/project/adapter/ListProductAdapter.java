@@ -59,7 +59,7 @@ public class ListProductAdapter extends BaseAdapter {
         }
         imageProduct = convertView.findViewById(R.id.image_display);
         txtProductName = convertView.findViewById(R.id.title1);
-        txtDetail = convertView.findViewById(R.id.title2);
+//        txtDetail = convertView.findViewById(R.id.title2);
         Bitmap bm = null;
         try {
             URL url = new URL(dishList.get(position).getUrl());
