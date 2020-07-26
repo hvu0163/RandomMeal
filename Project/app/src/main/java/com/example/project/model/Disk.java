@@ -7,6 +7,7 @@ public class Disk {
     private String Content;
     private float RateAVG;
     private int CategoryID;
+    private String Material;
 
     public Disk() {
     }
@@ -18,6 +19,14 @@ public class Disk {
         Content = content;
         RateAVG = rateAVG;
         CategoryID = categoryID;
+    }
+
+    public String getMaterial() {
+        return Material;
+    }
+
+    public void setMaterial(String material) {
+        Material = material;
     }
 
     public int getDiskID() {

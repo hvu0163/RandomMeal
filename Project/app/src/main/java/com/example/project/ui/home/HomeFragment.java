@@ -39,7 +39,7 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
         DBContext db = new DBContext(root.getContext());
-        List<Dishes> content = db.getTopDisk();
+        final List<Dishes> content = db.getTopDisk();
         final List<Dishes> list = new ArrayList<>();
 //        System.out.println();
 //        for (int i = 0; i < 9; i++) {
@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), list.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), content.get(position).getName(), Toast.LENGTH_SHORT).show();
 
             }
         });
