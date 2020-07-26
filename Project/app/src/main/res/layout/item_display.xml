@@ -36,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Chi tiet mon an"
         app:layout_constraintEnd_toEndOf="@+id/image_display"
         app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="@+id/image_display"

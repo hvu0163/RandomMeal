@@ -69,7 +69,7 @@ public class ListProductAdapter extends BaseAdapter {
         }
         Glide.with(convertView).load(dishList.get(position).getUrl()).into(imageProduct);
         txtProductName.setText(dishList.get(position).getName());
-        txtDetail.setText(dishList.get(position).getName());
+//        txtDetail.setText(dishList.get(position).getName());
         return convertView;
     }
 }
