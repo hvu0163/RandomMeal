@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.project.model.Account;
+import com.example.project.model.Disk;
+import com.example.project.model.DiskCategory;
 import com.example.project.model.UserInformation;
 
 public class DBContext extends SQLiteOpenHelper {
@@ -20,6 +22,8 @@ public class DBContext extends SQLiteOpenHelper {
 
     // Database Name
     private static final String DATABASE_NAME = "ProjectPRM";
+
+    private static int checkCreate = 1;
 
     public DBContext(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -45,6 +49,34 @@ public class DBContext extends SQLiteOpenHelper {
                 "Age int\n" +
                 ")";
         db.execSQL(sqlCreate);
+                //Table DiskCategory
+        sqlCreate = "";
+        sqlCreate += "create table DiskCategory(\n" +
+                "CategoryID INTEGER primary key AUTOINCREMENT,\n" +
+                "CategoryName nvarchar(200),\n" +
+                "Description nvarchar(200)\n" +
+                ")";
+        db.execSQL(sqlCreate);
+        //Table Disk
+        sqlCreate = "";
+        sqlCreate += "create table Disk(\n" +
+                "DiskID INTEGER primary key AUTOINCREMENT,\n" +
+                "DiskName nvarchar(200),\n" +
+                "Description nvarchar(200),\n" +
+                "Content TEXT,\n" +
+                "RateAVG float,\n" +
+                "CategoryID INTEGER references DiskCategory(CategoryID)\n" +
+                ")";
+        db.execSQL(sqlCreate);
+        //Table RawMaterial
+        sqlCreate = "";
+        sqlCreate += "create table RawMaterial(\n" +
+                "STT INTEGER primary key AUTOINCREMENT,\n" +
+                "Content nvarchar(200),\n" +
+                "DiskID INTEGER references Disk(DiskID)\n" +
+                ")";
+        db.execSQL(sqlCreate);
+//        addCategory();
     }
 
     @Override
@@ -52,6 +84,14 @@ public class DBContext extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS UserInfor");
         db.execSQL("DROP TABLE IF EXISTS Account");
         onCreate(db);
+    }
+
+    public static int getCheckCreate() {
+        return checkCreate;
+    }
+
+    public static void setCheckCreate(int checkCreate) {
+        DBContext.checkCreate = checkCreate;
     }
 
     public void addAccount(Account account) {
@@ -91,6 +131,54 @@ public class DBContext extends SQLiteOpenHelper {
             e.getMessage().toString();
             return null;
         }
+    }
+
+    public void addDisk(String string) {
+        String[] text = string.split("_");
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("DiskName", text[0]);
+        values.put("Description", text[2]);
+        values.put("Content", text[4]);
+        values.put("RateAVG", 0);
+        values.put("CategoryID", text[1]);
+
+        db.insert("Disk", null, values);
+
+        Disk disk = getDisk(text[0], text[1]);
+        ContentValues values1 = new ContentValues();
+        values1.put("Content", text[3]);
+        values1.put("DiskID", disk.getDiskID());
+
+        db.insert("RawMaterial", null, values1);
+        db.close();
+    }
+
+    public Disk getDisk(String DiskName, String Category) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select * from Disk where DiskName = ? and CategoryID = ?";
+        Cursor cursor = db.rawQuery(sql, new String[]{DiskName, Category});
+        if (cursor.moveToNext()) {
+            Disk disk = new Disk();
+            disk.setDiskID(cursor.getInt(0));
+            return disk;
+        } else {
+            return null;
+        }
+    }
+
+    public void addCategory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Main disk
+        DiskCategory diskCategory = new DiskCategory();
+        diskCategory.setCategoryName("Main disk");
+        diskCategory.setDescription("");
+        ContentValues values = new ContentValues();
+        values.put("CategoryName", diskCategory.getCategoryName());
+        values.put("Description", diskCategory.getDescription());
+
+        db.insert("DiskCategory", null, values);
+        db.close();
     }
 
     public Account getAccountByUsername(String username) {
