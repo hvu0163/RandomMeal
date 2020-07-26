@@ -3,7 +3,7 @@ package com.example.project.model;
 public class UserInformation {
     private int UserID;
     private String FullName;
-    private String Address;
+    private String Email;
     private int Age;
 
     public UserInformation() {
@@ -12,7 +12,7 @@ public class UserInformation {
     public UserInformation(int userID, String fullName, String address, int age) {
         UserID = userID;
         FullName = fullName;
-        Address = address;
+        Email = address;
         Age = age;
     }
 
@@ -32,12 +32,12 @@ public class UserInformation {
         FullName = fullName;
     }
 
-    public String getAddress() {
-        return Address;
+    public String getEmail() {
+        return Email;
     }
 
-    public void setAddress(String address) {
-        Address = address;
+    public void setEmail(String email) {
+        Email = email;
     }
 
     public int getAge() {

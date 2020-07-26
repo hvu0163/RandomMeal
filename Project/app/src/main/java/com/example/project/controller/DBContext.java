@@ -1,25 +1,17 @@
 package com.example.project.controller;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
-import android.os.StrictMode;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.project.model.Account;
+import com.example.project.model.Disk;
+import com.example.project.model.DiskCategory;
 import com.example.project.model.UserInformation;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 public class DBContext extends SQLiteOpenHelper {
 
@@ -31,6 +23,8 @@ public class DBContext extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "ProjectPRM";
 
+    private static int checkCreate = 1;
+
     public DBContext(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -41,20 +35,48 @@ public class DBContext extends SQLiteOpenHelper {
 
         //Table Account
         sqlCreate += "create table Account(\n" +
+                "UserID INTEGER primary key AUTOINCREMENT,\n" +
                 "Username nvarchar(200) unique NOT NULL,\n" +
-                "[Password] nvarchar(200) NOT NULL,\n" +
-                "UserID int identity(1,1) primary key\n" +
+                "[Password] nvarchar(200) NOT NULL\n" +
                 ")\n";
         db.execSQL(sqlCreate);
         //Table UserInformation
         sqlCreate = "";
         sqlCreate += "create table UserInfor(\n" +
-                "UserID int references Account(UserID),\n" +
+                "UserID INTEGER references Account(UserID),\n" +
                 "FullName nvarchar(200),\n" +
-                "[Address] nvarchar(200),\n" +
+                "[Email] nvarchar(200),\n" +
                 "Age int\n" +
                 ")";
         db.execSQL(sqlCreate);
+                //Table DiskCategory
+        sqlCreate = "";
+        sqlCreate += "create table DiskCategory(\n" +
+                "CategoryID INTEGER primary key AUTOINCREMENT,\n" +
+                "CategoryName nvarchar(200),\n" +
+                "Description nvarchar(200)\n" +
+                ")";
+        db.execSQL(sqlCreate);
+        //Table Disk
+        sqlCreate = "";
+        sqlCreate += "create table Disk(\n" +
+                "DiskID INTEGER primary key AUTOINCREMENT,\n" +
+                "DiskName nvarchar(200),\n" +
+                "Description nvarchar(200),\n" +
+                "Content TEXT,\n" +
+                "RateAVG float,\n" +
+                "CategoryID INTEGER references DiskCategory(CategoryID)\n" +
+                ")";
+        db.execSQL(sqlCreate);
+        //Table RawMaterial
+        sqlCreate = "";
+        sqlCreate += "create table RawMaterial(\n" +
+                "STT INTEGER primary key AUTOINCREMENT,\n" +
+                "Content nvarchar(200),\n" +
+                "DiskID INTEGER references Disk(DiskID)\n" +
+                ")";
+        db.execSQL(sqlCreate);
+//        addCategory();
     }
 
     @Override
@@ -62,6 +84,14 @@ public class DBContext extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS UserInfor");
         db.execSQL("DROP TABLE IF EXISTS Account");
         onCreate(db);
+    }
+
+    public static int getCheckCreate() {
+        return checkCreate;
+    }
+
+    public static void setCheckCreate(int checkCreate) {
+        DBContext.checkCreate = checkCreate;
     }
 
     public void addAccount(Account account) {
@@ -90,9 +120,99 @@ public class DBContext extends SQLiteOpenHelper {
             Cursor cursor = db.rawQuery(sql, new String[]{username, password});
             if (cursor.moveToNext()) {
                 Account account = new Account();
-                account.setUsername(cursor.getString(0));
-                account.setPassword(cursor.getString(1));
+                account.setUserID(cursor.getInt(0));
+                account.setUsername(cursor.getString(1));
+                account.setPassword(cursor.getString(2));
                 return account;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.getMessage().toString();
+            return null;
+        }
+    }
+
+    public void addDisk(String string) {
+        String[] text = string.split("_");
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("DiskName", text[0]);
+        values.put("Description", text[2]);
+        values.put("Content", text[4]);
+        values.put("RateAVG", 0);
+        values.put("CategoryID", text[1]);
+
+        db.insert("Disk", null, values);
+
+        Disk disk = getDisk(text[0], text[1]);
+        ContentValues values1 = new ContentValues();
+        values1.put("Content", text[3]);
+        values1.put("DiskID", disk.getDiskID());
+
+        db.insert("RawMaterial", null, values1);
+        db.close();
+    }
+
+    public Disk getDisk(String DiskName, String Category) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select * from Disk where DiskName = ? and CategoryID = ?";
+        Cursor cursor = db.rawQuery(sql, new String[]{DiskName, Category});
+        if (cursor.moveToNext()) {
+            Disk disk = new Disk();
+            disk.setDiskID(cursor.getInt(0));
+            return disk;
+        } else {
+            return null;
+        }
+    }
+
+    public void addCategory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Main disk
+        DiskCategory diskCategory = new DiskCategory();
+        diskCategory.setCategoryName("Main disk");
+        diskCategory.setDescription("");
+        ContentValues values = new ContentValues();
+        values.put("CategoryName", diskCategory.getCategoryName());
+        values.put("Description", diskCategory.getDescription());
+
+        db.insert("DiskCategory", null, values);
+        db.close();
+    }
+
+    public Account getAccountByUsername(String username) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from Account where Username = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{username});
+            if (cursor.moveToNext()) {
+                Account account = new Account();
+                account.setUserID(cursor.getInt(0));
+                account.setUsername(cursor.getString(1));
+                account.setPassword(cursor.getString(2));
+                return account;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.getMessage().toString();
+            return null;
+        }
+    }
+
+    public UserInformation getUserInforByAccount (Account account) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select * from UserInfor where UserID = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(account.getUserID())});
+            if(cursor.moveToNext()) {
+                UserInformation userInformation = new UserInformation();
+                userInformation.setUserID(account.getUserID());
+                userInformation.setFullName(cursor.getString(1));
+                userInformation.setEmail(cursor.getString(2));
+                userInformation.setAge(cursor.getInt(3));
+                return userInformation;
             } else {
                 return null;
             }
@@ -122,7 +242,7 @@ public class DBContext extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("UserID", userInformation.getUserID());
         values.put("FullName", userInformation.getFullName());
-        values.put("Address", userInformation.getAddress());
+        values.put("Email", userInformation.getEmail());
         values.put("Age", userInformation.getAge());
 
         // Inserting Row
@@ -130,5 +250,12 @@ public class DBContext extends SQLiteOpenHelper {
 
         // Closing database connection
         db.close();
+    }
+
+    public void resetPassword(Account account) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("Password", "123");
+        db.update("Account", values, "Username = ?", new String[]{account.getUsername()});
     }
 }

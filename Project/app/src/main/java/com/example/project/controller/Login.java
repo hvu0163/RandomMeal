@@ -1,7 +1,5 @@
 package com.example.project.controller;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -12,8 +10,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.project.R;
 import com.example.project.model.Account;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class Login extends AppCompatActivity {
     EditText username, password;
@@ -26,7 +30,10 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         DBContext db = new DBContext(this);
-        db.addAdminAccount();
+        if(db.getCheckCreate() == 1) {
+            db.addAdminAccount();
+            db.addCategory();
+        }
 
         create_account = findViewById(R.id.create_account);
         SpannableString content = new SpannableString("Create account");
@@ -52,6 +59,20 @@ public class Login extends AppCompatActivity {
         Account account = db.getAccount(username.getText().toString(), password.getText().toString());
         if (account != null) {
             Toast.makeText(this, "ss", Toast.LENGTH_LONG).show();
+
+            if(db.getCheckCreate() == 1) {
+                try {
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(getAssets().open("insert.txt")));
+                    String line = bufferedReader.readLine();
+                    while (line != null) {
+                        db.addDisk(line);
+                        line = bufferedReader.readLine();
+                    }
+                    db.setCheckCreate(0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             Intent intent = new Intent(this, Home.class);
             this.startActivity(intent);
