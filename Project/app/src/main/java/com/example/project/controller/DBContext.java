@@ -312,7 +312,6 @@ public class DBContext extends SQLiteOpenHelper {
     }
 
     public Dishes getADisk() {
-        List<Dishes> list = new ArrayList<>();
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from Disk order by RateAVG desc LIMIT 9";

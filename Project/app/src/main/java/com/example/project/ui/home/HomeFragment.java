@@ -39,26 +39,26 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
         DBContext db = new DBContext(root.getContext());
-        List<Dishes> content = db.getTopDisk();
-        final List<Dishes> list = new ArrayList<>();
+        final List<Dishes> content = db.getTopDisk();
+//        final List<Dishes> list = new ArrayList<>();
 //        System.out.println();
 //        for (int i = 0; i < 9; i++) {
 //            Dishes d = new Dishes();
 //            d.setName("Phở bò");
 //            d.setUrl("https://hocnauan.edu.vn/wp-content/uploads/2018/10/to-pho-bo-ha-noi.jpg");
-//            Dishes dishes = db.getADisk();
-//            list.add(dishes);
+////            Dishes dishes = db.getADisk();
+//            list.add(d);
 //        }
         gridView = root.findViewById(R.id.gridview);
         ListProductAdapter abc = new ListProductAdapter(getContext(), R.layout.fragment_home, content);
         gridView.setNumColumns(3);
-        gridView.setHorizontalSpacing(10);
+        gridView.setHorizontalSpacing(5);
         gridView.setVerticalSpacing(10);
         gridView.setAdapter(abc);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), list.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), content.get(position).getName(), Toast.LENGTH_SHORT).show();
 
             }
         });
