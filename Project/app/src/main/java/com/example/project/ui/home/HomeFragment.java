@@ -39,20 +39,23 @@ public class HomeFragment extends Fragment {
 //                textView.setText(s);
 //            }
 //        });
-        List<Dishes> list = new ArrayList<>();
+        final List<Dishes> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Dishes d = new Dishes();
-            d.setName("abc");
+            d.setName(i+"");
             d.setUrl("https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Korean_acorn_jelly-Dotorimuk-03.jpg/1200px-Korean_acorn_jelly-Dotorimuk-03.jpg");
             list.add(d);
         }
         gridView = root.findViewById(R.id.gridview);
-        ListProductAdapter abc = new ListProductAdapter(root.getContext(), R.layout.fragment_home, list);
+        ListProductAdapter abc = new ListProductAdapter(getContext(), R.layout.fragment_home, list);
+        gridView.setNumColumns(3);
+        gridView.setHorizontalSpacing(10);
+        gridView.setVerticalSpacing(10);
         gridView.setAdapter(abc);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), list.get(position).getName(), Toast.LENGTH_SHORT).show();
 
             }
         });
