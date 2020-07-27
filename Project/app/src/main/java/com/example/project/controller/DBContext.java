@@ -21,6 +21,8 @@ public class DBContext extends SQLiteOpenHelper {
 
     private static final String TAG = "SQLite";
 
+    private static Account account;
+
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -88,6 +90,14 @@ public class DBContext extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS UserInfor");
         db.execSQL("DROP TABLE IF EXISTS Account");
         onCreate(db);
+    }
+
+    public static Account getAccount() {
+        return account;
+    }
+
+    public static void setAccount(Account account) {
+        DBContext.account = account;
     }
 
     public static int getCheckCreate() {
@@ -311,23 +321,22 @@ public class DBContext extends SQLiteOpenHelper {
         return list;
     }
 
-    public Dishes getADisk() {
+    public Disk getADisk(String id) {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
-            String sql = "select * from Disk order by RateAVG desc LIMIT 9";
+            String sql = "select d.*, r.Content from Disk d join RawMaterial r on d.DiskID = r.DiskID order by RateAVG desc LIMIT 9";
             Cursor cursor = db.rawQuery(sql, new String[]{});
             if(cursor.moveToNext()) {
                 Disk disk = new Disk();
+                disk.setDiskID(cursor.getInt(0));
                 disk.setDescription(cursor.getString(2));
                 disk.setDiskName(cursor.getString(1));
+                disk.setCategoryID(cursor.getInt(5));
+                disk.setContent(cursor.getString(3));
+                disk.setMaterial(cursor.getString(6));
 
-                Dishes dishes = new Dishes();
-                dishes.setName(disk.getDiskName());
-                dishes.setUrl(disk.getDescription().trim());
-
-                return dishes;
+                return disk;
             }
-
         } catch (Exception e) {
         }
         return null;

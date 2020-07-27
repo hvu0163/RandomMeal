@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.project.R;
 import com.example.project.model.Account;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,9 +72,15 @@ public class Login extends AppCompatActivity {
         Account account = db.getAccount(username.getText().toString(), password.getText().toString());
         if (account != null) {
             Toast.makeText(this, "ss", Toast.LENGTH_LONG).show();
-
+            db.setAccount(account);
             Intent intent = new Intent(this, Home.class);
             this.startActivity(intent);
+            if(account.getUsername().equals("admin")) {
+                NavigationView navigationView = findViewById(R.id.nav_view);
+                Menu menu = navigationView.getMenu();
+                String itemName = "Add dish";
+                menu.add(R.id.nav_view,Menu.NONE,Menu.NONE,itemName);
+            }
         } else {
             Toast.makeText(this, "ff", Toast.LENGTH_LONG).show();
         }

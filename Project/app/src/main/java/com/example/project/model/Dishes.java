@@ -3,6 +3,7 @@ package com.example.project.model;
 public class Dishes {
     private String name;
     private String url;
+    private int id;
 
     public Dishes() {
     }
