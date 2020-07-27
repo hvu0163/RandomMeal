@@ -91,6 +91,14 @@ public class DBContext extends SQLiteOpenHelper {
                 "DiskID INTEGER references Disk(DiskID)\n" +
                 ")";
         db.execSQL(sqlCreate);
+        //Table Favorite list
+        sqlCreate = "";
+        sqlCreate += "create table Favorite(\n" +
+                "STT INTEGER primary key AUTOINCREMENT,\n" +
+                "Username nvarchar(200) references Account(Username),\n" +
+                "DiskID INTEGER references Disk(DiskID)\n" +
+                ")";
+        db.execSQL(sqlCreate);
 //        addCategory();
     }
 
@@ -99,6 +107,14 @@ public class DBContext extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS UserInfor");
         db.execSQL("DROP TABLE IF EXISTS Account");
         onCreate(db);
+    }
+
+    public static Disk getCurrentDisk() {
+        return currentDisk;
+    }
+
+    public static void setCurrentDisk(Disk currentDisk) {
+        DBContext.currentDisk = currentDisk;
     }
 
     public static int getCheckCreate() {
@@ -371,6 +387,7 @@ public class DBContext extends SQLiteOpenHelper {
                 temp = temp.replaceAll("-","\n");
                 disk.setMaterial(temp);
 
+                currentDisk = disk;
                 list.add(disk);
             }
 
@@ -381,5 +398,53 @@ public class DBContext extends SQLiteOpenHelper {
         int bound = r.nextInt(list.size());
         Disk disk = list.get(bound);
         return disk;
+    }
+
+    public void updateDisk(Disk disk) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("DiskName", disk.getDiskName());
+        values.put("Content", disk.getContent());
+        db.update("Disk", values, "DiskID = ?", new String[]{String.valueOf(disk.getDiskID())});
+
+        ContentValues values1 = new ContentValues();
+        values1.put("Content", disk.getMaterial());
+        db.update("RawMaterial", values1, "DiskID = ?", new String[]{String.valueOf(disk.getDiskID())});
+    }
+
+    public boolean addFavourite() {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("Username", account.getUsername());
+            values.put("DiskID", currentDisk.getDiskID());
+
+            db.insert("Favorite", null, values);
+            return true;
+        }catch(Exception e) {
+            e.getMessage().toString();
+            return false;
+        }
+    }
+    public boolean unFavourite() {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete("Favorite", "DiskID = ? and Username = ?", new String[]{String.valueOf(currentDisk.getDiskID()), account.getUsername()});
+
+            return true;
+        }catch(Exception e) {
+            e.getMessage().toString();
+            return false;
+        }
+    }
+
+    public boolean checkLike() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select * from Favorite where DiskID = ? and Username = ?";
+        Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(currentDisk.getDiskID()), account.getUsername()});
+        if(cursor.moveToNext())
+            return true;
+        else
+            return false;
     }
 }
