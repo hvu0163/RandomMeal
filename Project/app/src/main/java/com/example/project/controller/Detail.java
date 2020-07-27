@@ -3,6 +3,7 @@ package com.example.project.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,13 +16,20 @@ import com.example.project.model.Disk;
 public class Detail extends AppCompatActivity {
     ImageView imageView;
     TextView title, ingre_detail, recipe_detail;
+    Button but_edit, but_del;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        but_edit = findViewById(R.id.but_detail_edit);
+        but_del = findViewById(R.id.but_detail_del);
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         DBContext db = new DBContext(this);
+        if(db.getAccount().getUsername().equals("admin")) {
+            but_edit.setVisibility(View.VISIBLE);
+            but_del.setVisibility(View.VISIBLE);
+        }
         Disk d = db.getADisk(id);
         imageView = findViewById(R.id.image_detail);
         Glide.with(this).load(d.getDescription()).into(imageView);
@@ -36,5 +44,12 @@ public class Detail extends AppCompatActivity {
 
     public void onCLickEdit(View view) {
 
+    }
+
+    public void onClickDel(View view) {
+        DBContext db = new DBContext(this);
+        db.delDisk();
+        Intent intent = new Intent(this, Home.class);
+        this.startActivity(intent);
     }
 }
