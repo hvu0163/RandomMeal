@@ -313,6 +313,10 @@ public class DBContext extends SQLiteOpenHelper {
 
     public Dishes getADisk() {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        List<Dishes> list = new ArrayList<>();
+>>>>>>> parent of f837be9... update
 =======
         List<Dishes> list = new ArrayList<>();
 >>>>>>> parent of f837be9... update
