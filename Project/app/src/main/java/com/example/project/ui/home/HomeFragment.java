@@ -1,5 +1,6 @@
 package com.example.project.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.project.R;
 import com.example.project.adapter.ListProductAdapter;
 import com.example.project.controller.DBContext;
+import com.example.project.controller.Detail;
 import com.example.project.model.Dishes;
 import com.example.project.model.Disk;
 
@@ -31,14 +33,7 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-//        final TextView textView = root.findViewById(R.id.text_home);
-//        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
+        final View root = inflater.inflate(R.layout.fragment_home, container, false);
         DBContext db = new DBContext(root.getContext());
         final List<Disk> content = db.getTopDisk();
         gridView = root.findViewById(R.id.gridview);
@@ -51,6 +46,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(view.getContext(), content.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(root.getContext(), Detail.class);
+                intent.putExtra("id", content.get(position).getDiskID());
+                startActivity(intent);
 
             }
         });

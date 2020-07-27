@@ -308,18 +308,22 @@ public class DBContext extends SQLiteOpenHelper {
         return list;
     }
 
-    public Disk getADisk() {
+    public Disk getADisk(String id) {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
-            String sql = "select * from Disk order by RateAVG desc LIMIT 9";
+            String sql = "select d.*, r.Content from Disk d join RawMaterial r on d.DiskID = r.DiskID order by RateAVG desc LIMIT 9";
             Cursor cursor = db.rawQuery(sql, new String[]{});
-            if (cursor.moveToNext()) {
+            if(cursor.moveToNext()) {
                 Disk disk = new Disk();
+                disk.setDiskID(cursor.getInt(0));
                 disk.setDescription(cursor.getString(2).trim());
                 disk.setDiskName(cursor.getString(1));
+                disk.setCategoryID(cursor.getInt(5));
+                disk.setContent(cursor.getString(3));
+                disk.setMaterial(cursor.getString(6));
+
                 return disk;
             }
-
         } catch (Exception e) {
         }
         return null;
