@@ -21,8 +21,6 @@ public class DBContext extends SQLiteOpenHelper {
 
     private static final String TAG = "SQLite";
 
-    private static Account account;
-
     // Database Version
     private static final int DATABASE_VERSION = 1;
 
@@ -55,7 +53,7 @@ public class DBContext extends SQLiteOpenHelper {
                 "Age int\n" +
                 ")";
         db.execSQL(sqlCreate);
-                //Table DiskCategory
+        //Table DiskCategory
         sqlCreate = "";
         sqlCreate += "create table DiskCategory(\n" +
                 "CategoryID INTEGER primary key AUTOINCREMENT,\n" +
@@ -90,14 +88,6 @@ public class DBContext extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS UserInfor");
         db.execSQL("DROP TABLE IF EXISTS Account");
         onCreate(db);
-    }
-
-    public static Account getAccount() {
-        return account;
-    }
-
-    public static void setAccount(Account account) {
-        DBContext.account = account;
     }
 
     public static int getCheckCreate() {
@@ -240,12 +230,12 @@ public class DBContext extends SQLiteOpenHelper {
         }
     }
 
-    public UserInformation getUserInforByAccount (Account account) {
+    public UserInformation getUserInforByAccount(Account account) {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from UserInfor where UserID = ?";
             Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(account.getUserID())});
-            if(cursor.moveToNext()) {
+            if (cursor.moveToNext()) {
                 UserInformation userInformation = new UserInformation();
                 userInformation.setUserID(account.getUserID());
                 userInformation.setFullName(cursor.getString(1));
@@ -266,7 +256,7 @@ public class DBContext extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from Account where Username = ?";
             Cursor cursor = db.rawQuery(sql, new String[]{username});
-            if(cursor.moveToNext()) {
+            if (cursor.moveToNext()) {
                 return true;
             } else
                 return false;
@@ -298,22 +288,19 @@ public class DBContext extends SQLiteOpenHelper {
         db.update("Account", values, "Username = ?", new String[]{account.getUsername()});
     }
 
-    public List<Dishes> getTopDisk() {
-        List<Dishes> list = new ArrayList<>();
+    public List<Disk> getTopDisk() {
+        List<Disk> list = new ArrayList<>();
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from Disk order by RateAVG desc LIMIT 9";
             Cursor cursor = db.rawQuery(sql, new String[]{});
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 Disk disk = new Disk();
-                disk.setDescription(cursor.getString(2));
+                disk.setDescription(cursor.getString(2).trim());
                 disk.setDiskName(cursor.getString(1));
 
-                Dishes dishes = new Dishes();
-                dishes.setName(disk.getDiskName());
-                dishes.setUrl(disk.getDescription().trim());
 
-                list.add(dishes);
+                list.add(disk);
             }
 
         } catch (Exception e) {
@@ -321,22 +308,18 @@ public class DBContext extends SQLiteOpenHelper {
         return list;
     }
 
-    public Disk getADisk(String id) {
+    public Disk getADisk() {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
-            String sql = "select d.*, r.Content from Disk d join RawMaterial r on d.DiskID = r.DiskID order by RateAVG desc LIMIT 9";
+            String sql = "select * from Disk order by RateAVG desc LIMIT 9";
             Cursor cursor = db.rawQuery(sql, new String[]{});
-            if(cursor.moveToNext()) {
+            if (cursor.moveToNext()) {
                 Disk disk = new Disk();
-                disk.setDiskID(cursor.getInt(0));
-                disk.setDescription(cursor.getString(2));
+                disk.setDescription(cursor.getString(2).trim());
                 disk.setDiskName(cursor.getString(1));
-                disk.setCategoryID(cursor.getInt(5));
-                disk.setContent(cursor.getString(3));
-                disk.setMaterial(cursor.getString(6));
-
                 return disk;
             }
+
         } catch (Exception e) {
         }
         return null;

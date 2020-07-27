@@ -28,10 +28,6 @@
         tools:layout="@layout/fragment_information" />
     <fragment
         android:id="@+id/nav_logout"
-        android:name="com.example.project.ui.logout.LogoutFragment"
+        android:name="com.example.project.ui.home.HomeFragment"
         tools:layout="@layout/fragment_information" />
-    <fragment
-        android:id="@+id/nav_add"
-        android:name="com.example.project.ui.add.AddFragment"
-        tools:layout="@layout/fragment_add" />
 </navigation>
