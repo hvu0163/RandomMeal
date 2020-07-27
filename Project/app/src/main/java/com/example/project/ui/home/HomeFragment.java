@@ -40,19 +40,19 @@ public class HomeFragment extends Fragment {
 //        });
         DBContext db = new DBContext(root.getContext());
         final List<Dishes> content = db.getTopDisk();
-//        final List<Dishes> list = new ArrayList<>();
+        final List<Dishes> list = new ArrayList<>();
 //        System.out.println();
 //        for (int i = 0; i < 9; i++) {
 //            Dishes d = new Dishes();
 //            d.setName("Phở bò");
 //            d.setUrl("https://hocnauan.edu.vn/wp-content/uploads/2018/10/to-pho-bo-ha-noi.jpg");
-////            Dishes dishes = db.getADisk();
-//            list.add(d);
+//            Dishes dishes = db.getADisk();
+//            list.add(dishes);
 //        }
         gridView = root.findViewById(R.id.gridview);
         ListProductAdapter abc = new ListProductAdapter(getContext(), R.layout.fragment_home, content);
         gridView.setNumColumns(3);
-        gridView.setHorizontalSpacing(5);
+        gridView.setHorizontalSpacing(10);
         gridView.setVerticalSpacing(10);
         gridView.setAdapter(abc);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
