@@ -7,26 +7,27 @@ public class Disk {
     private String Content;
     private float RateAVG;
     private int CategoryID;
-    private String Material;
+    private String material;
 
     public Disk() {
     }
 
-    public Disk(int diskID, String diskName, String description, String content, float rateAVG, int categoryID) {
+    public String getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(String material) {
+        this.material = material;
+    }
+
+    public Disk(int diskID, String diskName, String description, String content, float rateAVG, int categoryID, String material) {
         DiskID = diskID;
         DiskName = diskName;
         Description = description;
         Content = content;
         RateAVG = rateAVG;
         CategoryID = categoryID;
-    }
-
-    public String getMaterial() {
-        return Material;
-    }
-
-    public void setMaterial(String material) {
-        Material = material;
+        material = material;
     }
 
     public int getDiskID() {
