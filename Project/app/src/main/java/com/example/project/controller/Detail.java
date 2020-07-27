@@ -39,6 +39,7 @@ public class Detail extends AppCompatActivity {
         ingre_detail.setText(d.getMaterial());
         recipe_detail = findViewById(R.id.recipe_detail);
         recipe_detail.setText(d.getContent());
+        getIntent().removeExtra("id");
     }
 
     public void onCLickEdit(View view) {

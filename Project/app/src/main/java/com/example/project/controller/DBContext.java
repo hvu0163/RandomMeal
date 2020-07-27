@@ -302,7 +302,7 @@ public class DBContext extends SQLiteOpenHelper {
         List<Disk> list = new ArrayList<>();
         try {
             SQLiteDatabase db = this.getReadableDatabase();
-            String sql = "select * from Disk order by RateAVG desc LIMIT 9";
+            String sql = "select * from Disk order by RateAVG desc";
             Cursor cursor = db.rawQuery(sql, new String[]{});
             while (cursor.moveToNext()) {
                 Disk disk = new Disk();

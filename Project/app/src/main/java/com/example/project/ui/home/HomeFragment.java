@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +22,13 @@ import com.example.project.controller.Detail;
 import com.example.project.model.Disk;
 
 import java.util.List;
+import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private GridView gridView = null;
+    Button button;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +39,20 @@ public class HomeFragment extends Fragment {
         final List<Disk> content = db.getTopDisk();
         gridView = root.findViewById(R.id.gridview);
         ListProductAdapter abc = new ListProductAdapter(getContext(), R.layout.fragment_home, content);
+        button = root.findViewById(R.id.random_meal_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBContext db = new DBContext(root.getContext());
+                List<Disk> list = db.getTopDisk();
+                Random r = new Random();
+                int getRandomId = r.nextInt(9);
+                Intent intent = new Intent(root.getContext(), Detail.class);
+                Toast.makeText(root.getContext(), getRandomId, Toast.LENGTH_SHORT);
+                intent.putExtra("id", String.valueOf(getRandomId + 1));
+                startActivity(intent);
+            }
+        });
         gridView.setNumColumns(3);
         gridView.setHorizontalSpacing(10);
         gridView.setVerticalSpacing(10);
@@ -42,7 +60,6 @@ public class HomeFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(view.getContext(), String.valueOf(content.get(position).getDiskID()), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(root.getContext(), Detail.class);
                 intent.putExtra("id", String.valueOf(content.get(position).getDiskID()));
                 startActivity(intent);
@@ -50,10 +67,5 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
     }
 }
