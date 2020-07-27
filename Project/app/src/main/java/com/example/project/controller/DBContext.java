@@ -15,6 +15,7 @@ import com.example.project.model.UserInformation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class DBContext extends SQLiteOpenHelper {
 
@@ -349,5 +350,36 @@ public class DBContext extends SQLiteOpenHelper {
     public void delDisk() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("Disk", "DiskID = ?", new String[]{String.valueOf(currentDisk.getDiskID())});
+    }
+
+    public Disk randomDisk() {
+        List<Disk> list = new ArrayList<>();
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select d.*, r.Content from Disk d join RawMaterial r on d.DiskID = r.DiskID order by RateAVG desc";
+            Cursor cursor = db.rawQuery(sql, new String[]{});
+            while (cursor.moveToNext()) {
+                Disk disk = new Disk();
+                disk.setDescription(cursor.getString(2).trim());
+                disk.setDiskName(cursor.getString(1));
+                disk.setDiskID(cursor.getInt(0));
+                disk.setCategoryID(cursor.getInt(5));
+                String tempContent = cursor.getString(3);
+                tempContent = tempContent.replaceAll("-", "\n\n");
+                disk.setContent(tempContent);
+                String temp = cursor.getString(6);
+                temp = temp.replaceAll("-","\n");
+                disk.setMaterial(temp);
+
+                list.add(disk);
+            }
+
+        } catch (Exception e) {
+        }
+
+        Random r = new Random();
+        int bound = r.nextInt(list.size());
+        Disk disk = list.get(bound);
+        return disk;
     }
 }

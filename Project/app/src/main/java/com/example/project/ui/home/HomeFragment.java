@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -22,7 +20,6 @@ import com.example.project.controller.Detail;
 import com.example.project.model.Disk;
 
 import java.util.List;
-import java.util.Random;
 
 public class HomeFragment extends Fragment {
 
@@ -44,12 +41,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DBContext db = new DBContext(root.getContext());
-                List<Disk> list = db.getTopDisk();
-                Random r = new Random();
-                int getRandomId = r.nextInt(9);
+                Disk disk = db.randomDisk();
                 Intent intent = new Intent(root.getContext(), Detail.class);
-                Toast.makeText(root.getContext(), getRandomId, Toast.LENGTH_SHORT);
-                intent.putExtra("id", String.valueOf(getRandomId + 1));
+                intent.putExtra("id", String.valueOf(disk.getDiskID()));
                 startActivity(intent);
             }
         });
