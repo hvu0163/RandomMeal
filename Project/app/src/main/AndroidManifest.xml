@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".controller.Detail"></activity>
+        <activity android:name=".controller.Edit"></activity>
+        <activity android:name=".controller.Detail" />
         <activity android:name=".controller.ForgotPassword" />
         <activity
             android:name=".controller.Home"
