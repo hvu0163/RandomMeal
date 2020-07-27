@@ -69,8 +69,8 @@ public class Login extends AppCompatActivity {
 
         Account account = db.getAccount(username.getText().toString(), password.getText().toString());
         if (account != null) {
-            Toast.makeText(this, "ss", Toast.LENGTH_LONG).show();
-
+//            Toast.makeText(this, "ss", Toast.LENGTH_LONG).show();
+            db.setAccount(account);
             Intent intent = new Intent(this, Home.class);
             this.startActivity(intent);
         } else {

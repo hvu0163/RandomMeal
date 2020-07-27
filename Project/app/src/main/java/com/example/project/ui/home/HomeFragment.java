@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,10 +18,8 @@ import com.example.project.R;
 import com.example.project.adapter.ListProductAdapter;
 import com.example.project.controller.DBContext;
 import com.example.project.controller.Detail;
-import com.example.project.model.Dishes;
 import com.example.project.model.Disk;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -61,9 +58,8 @@ public class HomeFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(view.getContext(), content.get(position).getDescription(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(root.getContext(), Detail.class);
-                intent.putExtra("id", content.get(position).getDiskID());
+                intent.putExtra("id", String.valueOf(content.get(position).getDiskID()));
                 startActivity(intent);
 
             }
