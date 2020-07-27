@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,9 +46,10 @@ public class HomeFragment extends Fragment {
                 DBContext db = new DBContext(root.getContext());
                 List<Disk> list = db.getTopDisk();
                 Random r = new Random();
-                int getRandomId = r.nextInt(list.size());
+                int getRandomId = r.nextInt(9);
                 Intent intent = new Intent(root.getContext(), Detail.class);
-                intent.putExtra("id", getRandomId);
+                Toast.makeText(root.getContext(), getRandomId, Toast.LENGTH_SHORT);
+                intent.putExtra("id", String.valueOf(getRandomId + 1));
                 startActivity(intent);
             }
         });
