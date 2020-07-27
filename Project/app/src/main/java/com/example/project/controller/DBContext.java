@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.project.model.Account;
-import com.example.project.model.Dishes;
 import com.example.project.model.Disk;
 import com.example.project.model.DiskCategory;
 import com.example.project.model.UserInformation;
@@ -29,8 +28,18 @@ public class DBContext extends SQLiteOpenHelper {
 
     private static int checkCreate = 1;
 
+    private Account account;
+
     public DBContext(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     @Override
@@ -298,6 +307,7 @@ public class DBContext extends SQLiteOpenHelper {
                 Disk disk = new Disk();
                 disk.setDescription(cursor.getString(2).trim());
                 disk.setDiskName(cursor.getString(1));
+                disk.setDiskID(cursor.getInt(0));
 
 
                 list.add(disk);
@@ -311,16 +321,20 @@ public class DBContext extends SQLiteOpenHelper {
     public Disk getADisk(String id) {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
-            String sql = "select d.*, r.Content from Disk d join RawMaterial r on d.DiskID = r.DiskID order by RateAVG desc LIMIT 9";
-            Cursor cursor = db.rawQuery(sql, new String[]{});
+            String sql = "select d.*, r.Content from Disk d join RawMaterial r on d.DiskID = r.DiskID where d.DiskID = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{id});
             if(cursor.moveToNext()) {
                 Disk disk = new Disk();
                 disk.setDiskID(cursor.getInt(0));
                 disk.setDescription(cursor.getString(2).trim());
                 disk.setDiskName(cursor.getString(1));
                 disk.setCategoryID(cursor.getInt(5));
-                disk.setContent(cursor.getString(3));
-                disk.setMaterial(cursor.getString(6));
+                String tempContent = cursor.getString(3);
+                tempContent = tempContent.replaceAll("-", "\n\n");
+                disk.setContent(tempContent);
+                String temp = cursor.getString(6);
+                temp = temp.replaceAll("-","\n");
+                disk.setMaterial(temp);
 
                 return disk;
             }
