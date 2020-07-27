@@ -53,7 +53,7 @@ public class DBContext extends SQLiteOpenHelper {
                 "Age int\n" +
                 ")";
         db.execSQL(sqlCreate);
-                //Table DiskCategory
+        //Table DiskCategory
         sqlCreate = "";
         sqlCreate += "create table DiskCategory(\n" +
                 "CategoryID INTEGER primary key AUTOINCREMENT,\n" +
@@ -230,12 +230,12 @@ public class DBContext extends SQLiteOpenHelper {
         }
     }
 
-    public UserInformation getUserInforByAccount (Account account) {
+    public UserInformation getUserInforByAccount(Account account) {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from UserInfor where UserID = ?";
             Cursor cursor = db.rawQuery(sql, new String[]{String.valueOf(account.getUserID())});
-            if(cursor.moveToNext()) {
+            if (cursor.moveToNext()) {
                 UserInformation userInformation = new UserInformation();
                 userInformation.setUserID(account.getUserID());
                 userInformation.setFullName(cursor.getString(1));
@@ -256,7 +256,7 @@ public class DBContext extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from Account where Username = ?";
             Cursor cursor = db.rawQuery(sql, new String[]{username});
-            if(cursor.moveToNext()) {
+            if (cursor.moveToNext()) {
                 return true;
             } else
                 return false;
@@ -288,22 +288,19 @@ public class DBContext extends SQLiteOpenHelper {
         db.update("Account", values, "Username = ?", new String[]{account.getUsername()});
     }
 
-    public List<Dishes> getTopDisk() {
-        List<Dishes> list = new ArrayList<>();
+    public List<Disk> getTopDisk() {
+        List<Disk> list = new ArrayList<>();
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from Disk order by RateAVG desc LIMIT 9";
             Cursor cursor = db.rawQuery(sql, new String[]{});
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 Disk disk = new Disk();
-                disk.setDescription(cursor.getString(2));
+                disk.setDescription(cursor.getString(2).trim());
                 disk.setDiskName(cursor.getString(1));
 
-                Dishes dishes = new Dishes();
-                dishes.setName(disk.getDiskName());
-                dishes.setUrl(disk.getDescription().trim());
 
-                list.add(dishes);
+                list.add(disk);
             }
 
         } catch (Exception e) {
@@ -311,29 +308,16 @@ public class DBContext extends SQLiteOpenHelper {
         return list;
     }
 
-    public Dishes getADisk() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        List<Dishes> list = new ArrayList<>();
->>>>>>> parent of f837be9... update
-=======
-        List<Dishes> list = new ArrayList<>();
->>>>>>> parent of f837be9... update
+    public Disk getADisk() {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from Disk order by RateAVG desc LIMIT 9";
             Cursor cursor = db.rawQuery(sql, new String[]{});
-            if(cursor.moveToNext()) {
+            if (cursor.moveToNext()) {
                 Disk disk = new Disk();
-                disk.setDescription(cursor.getString(2));
+                disk.setDescription(cursor.getString(2).trim());
                 disk.setDiskName(cursor.getString(1));
-
-                Dishes dishes = new Dishes();
-                dishes.setName(disk.getDiskName());
-                dishes.setUrl(disk.getDescription().trim());
-
-                return dishes;
+                return disk;
             }
 
         } catch (Exception e) {

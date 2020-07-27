@@ -17,6 +17,7 @@ import com.example.project.R;
 import com.example.project.adapter.ListProductAdapter;
 import com.example.project.controller.DBContext;
 import com.example.project.model.Dishes;
+import com.example.project.model.Disk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,16 +40,7 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
         DBContext db = new DBContext(root.getContext());
-        List<Dishes> content = db.getTopDisk();
-        final List<Dishes> list = new ArrayList<>();
-//        System.out.println();
-//        for (int i = 0; i < 9; i++) {
-//            Dishes d = new Dishes();
-//            d.setName("Phở bò");
-//            d.setUrl("https://hocnauan.edu.vn/wp-content/uploads/2018/10/to-pho-bo-ha-noi.jpg");
-//            Dishes dishes = db.getADisk();
-//            list.add(dishes);
-//        }
+        final List<Disk> content = db.getTopDisk();
         gridView = root.findViewById(R.id.gridview);
         ListProductAdapter abc = new ListProductAdapter(getContext(), R.layout.fragment_home, content);
         gridView.setNumColumns(3);
@@ -58,7 +50,7 @@ public class HomeFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(view.getContext(), list.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), content.get(position).getDescription(), Toast.LENGTH_SHORT).show();
 
             }
         });

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.project.R;
 import com.example.project.model.Dishes;
+import com.example.project.model.Disk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,9 +25,9 @@ public class ListProductAdapter extends BaseAdapter {
 
     private Context context;
     private int layout;
-    private List<Dishes> dishList;
+    private List<Disk> dishList;
 
-    public ListProductAdapter(Context context, int layout, List<Dishes> dishList) {
+    public ListProductAdapter(Context context, int layout, List<Disk> dishList) {
         this.context = context;
         this.layout = layout;
         this.dishList = dishList;
@@ -51,25 +52,14 @@ public class ListProductAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageProduct;
         TextView txtProductName;
-        TextView txtDetail;
 
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.item_display, parent, false);
-
         }
         imageProduct = convertView.findViewById(R.id.image_display);
         txtProductName = convertView.findViewById(R.id.title1);
-        txtDetail = convertView.findViewById(R.id.title2);
-        Bitmap bm = null;
-        try {
-            URL url = new URL(dishList.get(position).getUrl());
-            bm = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        }catch(Exception e) {
-
-        }
-        Glide.with(convertView).load(dishList.get(position).getUrl()).into(imageProduct);
-        txtProductName.setText(dishList.get(position).getName());
-//        txtDetail.setText(dishList.get(position).getName());
+        Glide.with(convertView).load(dishList.get(position).getDescription()).into(imageProduct);
+        txtProductName.setText(dishList.get(position).getDiskName());
         return convertView;
     }
 }
