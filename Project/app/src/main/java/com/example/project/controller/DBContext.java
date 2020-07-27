@@ -312,6 +312,10 @@ public class DBContext extends SQLiteOpenHelper {
     }
 
     public Dishes getADisk() {
+<<<<<<< HEAD
+=======
+        List<Dishes> list = new ArrayList<>();
+>>>>>>> parent of f837be9... update
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String sql = "select * from Disk order by RateAVG desc LIMIT 9";
