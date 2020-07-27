@@ -447,4 +447,25 @@ public class DBContext extends SQLiteOpenHelper {
         else
             return false;
     }
+
+    public List<Disk> getLikeDisk() {
+        List<Disk> list = new ArrayList<>();
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String sql = "select d.* from Favorite f join Disk d on f.DiskID = d.DiskID where f.Username = ?";
+            Cursor cursor = db.rawQuery(sql, new String[]{account.getUsername()});
+            while (cursor.moveToNext()) {
+                Disk disk = new Disk();
+                disk.setDescription(cursor.getString(2).trim());
+                disk.setDiskName(cursor.getString(1));
+                disk.setDiskID(cursor.getInt(0));
+
+
+                list.add(disk);
+            }
+
+        } catch (Exception e) {
+        }
+        return list;
+    }
 }
