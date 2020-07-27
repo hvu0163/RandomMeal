@@ -27,8 +27,9 @@ public class DBContext extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "ProjectPRM";
 
     private static int checkCreate = 1;
+    private static Disk currentDisk;
 
-    private Account account;
+    private static Account account;
 
     public DBContext(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -336,10 +337,17 @@ public class DBContext extends SQLiteOpenHelper {
                 temp = temp.replaceAll("-","\n");
                 disk.setMaterial(temp);
 
+                currentDisk = disk;
+
                 return disk;
             }
         } catch (Exception e) {
         }
         return null;
+    }
+
+    public void delDisk() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("Disk", "DiskID = ?", new String[]{String.valueOf(currentDisk.getDiskID())});
     }
 }

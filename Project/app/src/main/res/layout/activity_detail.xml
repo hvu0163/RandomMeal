@@ -74,6 +74,7 @@
                 android:id="@+id/but_detail_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="onCLickEdit"
                 android:text="Edit"
                 android:visibility="invisible" />
 
@@ -81,6 +82,7 @@
                 android:id="@+id/but_detail_del"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="onClickDel"
                 android:text="Delete"
                 android:visibility="invisible" />
         </LinearLayout>
